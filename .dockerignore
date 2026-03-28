@@ -1,3 +1,7 @@
+
+# Add this line at the top of the "Distribution" section
+env/
+
 # Django project
 /media/
 /static/

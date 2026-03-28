@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
+from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -8,13 +10,24 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
+# --- ADDED: Secret Admin Creation Function ---
+def setup_admin(request):
+    if not User.objects.filter(username='admin').exists():
+        # Change 'mypassword123' to whatever you want your secure password to be!
+        User.objects.create_superuser('admin', 'admin@example.com', 'password123')
+        return HttpResponse("SUCCESS: Admin created! You can now log in.")
+    return HttpResponse("Admin already exists. You can log in safely.")
+# ---------------------------------------------
+
 urlpatterns = [
+    # --- ADDED: Secret URL Route ---
+    path("secret-setup-admin/", setup_admin),
+    
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
 ]
-
 
 if settings.DEBUG:
     from django.conf.urls.static import static
