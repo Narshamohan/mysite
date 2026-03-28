@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}
+    {# 1. The Hero Section #}
+    <div class="hero-container" style="background: #222; color: white; padding: 60px 20px; text-align: center;">
+        
+        {# Display the Hero Image #}
+        {% if page.image %}
+            {% image page.image fill-1200x500 as hero_img %}
+            <img src="{{ hero_img.url }}" alt="{{ hero_img.alt }}" style="max-width: 100%; border-radius: 8px; margin-bottom: 20px;">
+        {% endif %}
+
+        {# Display the Hero Text #}
+        <h1 style="font-size: 3rem; margin-bottom: 10px;">{{ page.title }}</h1>
+        
+        {% if page.hero_text %}
+            <p style="font-size: 1.4rem; color: #ccc; max-width: 800px; margin: 0 auto 30px;">
+                {{ page.hero_text }}
+            </p>
+        {% endif %}
+
+        {# Display the Call to Action Button #}
+        {% if page.hero_cta_link %}
+            <a href="{% pageurl page.hero_cta_link %}" style="padding: 12px 30px; background: #00d1b2; color: black; text-decoration: none; font-weight: bold; border-radius: 4px;">
+                {{ page.hero_cta|default:"Get Started" }}
+            </a>
+        {% endif %}
+    </div>
+
+    {# 2. The Body Content #}
+    <div class="main-content" style="max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.6; font-size: 1.1rem;">
+        {{ page.body|richtext }}
+    </div>
+{% endblock %}
